@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Summarization</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/static/css/jquery-ui.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('static/images/AppBreweryWallpaper6.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        header {
+            background-color: rgba(0, 74, 86, 0.8);
+            padding: 20px;
+            color: #fff;
+        }
+        .section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .form-section,
+        .result-section {
+            flex: 1;
+            padding: 20px;
+        }
+        .summary-length {
+            color: #fff;
+        }
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=661f3570cc3839001d980ac4&product=sticky-share-buttons&source=platform" async="async"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="/static/images/SynopserLogo.png" alt="Logo" class="logo">
+            <div class="header-text">Text Summarization</div>
+        </div>
+    </header>
+    <section class="section">
+        <div class="form-section">
+            <div class="container">
+                <form id="uploadForm" action="{{url_for('Summarize')}}" method="post" enctype="multipart/form-data">
+                    <input type="file" name="document" accept=".txt,.pdf" onchange="handleFileSelect(event)">
+                    <textarea class="w-full h-48 md:h-96 border rounded-lg p-2 mb-4" name="data" id="data" placeholder="Enter your Data" required></textarea>
+                    <div class="flex justify-center md:justify-start">
+                        <h3 class="mr-2 summary-length">Summary Length</h3>
+                        <input type="range" class="mr-2" min="20" max="1000" name="maxL">
+                    </div>
+                    <div class="flex justify-center md:justify-start">
+                        <button class="bg-green-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg mr-2" type="submit">Submit</button>
+                        <button class="bg-red-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg" type="reset">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="result-section">
+            <div class="container">
+                <textarea class="w-full h-48 md:h-96 border rounded-lg p-2 mb-4" name="result" readonly placeholder="Your Summary">{{result}}</textarea>
+                <button class="bg-blue-400 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg self-center" onclick="myFunction()">Copy text</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    document.getElementById("data").value = text;
+                };
+                reader.readAsText(file, 'UTF-8');
+            }
+        }
+        function myFunction() {
+            var copyText = document.getElementById("result");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+        }
+    </script>
+    <div class="sharethis-sticky-share-buttons"></div>
+</body>
+</html>
